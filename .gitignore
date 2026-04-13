@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Virtual environment
+venv/
+.env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Generated files
+note.txt
+note.midi
+*.midi
+*.mid
+*.wav
+
+# MAESTRO dataset (large, not needed in repo)
+maestro-v3.0.0/
+
+# Logs
+*.log
