@@ -16,12 +16,20 @@ venv/
 *.swp
 *.swo
 
+# Qwen Code
+.qwen/
+
 # Generated files
 note.txt
 note.midi
 *.midi
 *.mid
 *.wav
+generated.txt
+generated.midi
+
+# Token data (large)
+data/
 
 # MAESTRO dataset (large, not needed in repo)
 maestro-v3.0.0/
