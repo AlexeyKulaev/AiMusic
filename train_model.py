@@ -2,7 +2,6 @@
 """
 Train a transformer model on MIDI token sequences.
 
-Model architecture copied from model.py (karpathy-style decoder-only transformer).
 Data is loaded from train.txt and validate.txt (comma-separated integer tokens).
 
 Usage:
@@ -26,7 +25,7 @@ max_iters = 500
 eval_interval = 300
 learning_rate = 1e-3
 device = "cuda" if torch.cuda.is_available() else "cpu"
-eval_iters = 200
+eval_iters = 100
 n_embed = 384       # sz_token = 64 * 6
 n_head = 6
 n_layer = 3
@@ -37,6 +36,7 @@ dropout = 0.2
 # -----------------------------------------------------------------------------
 project_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(project_dir, "data")
+# print(data_dir)
 
 def load_tokens(filename):
     path = os.path.join(data_dir, filename)
@@ -199,10 +199,31 @@ parser = argparse.ArgumentParser(description="Train or generate with MIDI transf
 parser.add_argument("--resume", type=str, default=None, help="Path to model.pth to resume training")
 parser.add_argument("--generate", type=str, default=None, help="Path to model.pth to generate only (no training)")
 parser.add_argument("--iters", type=int, default=None, help="Override max_iters")
+parser.add_argument("--samples", type=int, default=1, help="Number of samples to generate")
 args = parser.parse_args()
 
-if args.iters is not None:
-    max_iters = args.iters
+sample_dir = os.path.join(project_dir, "sample")
+os.makedirs(sample_dir, exist_ok=True)
+
+# -----------------------------------------------------------------------------
+# Helpers
+# -----------------------------------------------------------------------------
+def generate_and_save(sample_idx, max_tokens=5000):
+    model.eval()
+    print(f"Generating sample {sample_idx} ({max_tokens} tokens)...")
+    context = torch.zeros((1, 1), dtype=torch.int64, device=device)
+    generated = model.generate(context, max_new_tokens=max_tokens)
+    tokens_out = generated[0].tolist()
+
+    txt_path = os.path.join(sample_dir, f"generated_{sample_idx}.txt")
+    with open(txt_path, "w") as f:
+        f.write(",".join(str(t) for t in tokens_out))
+    print(f"  Saved {txt_path} ({len(tokens_out)} tokens)")
+
+    midi_path = os.path.join(sample_dir, f"generated_{sample_idx}.midi")
+    import midi_decoder
+    midi_decoder.tokens_to_midi(tokens_out, midi_path)
+    print(f"  Saved {midi_path}")
 
 # -----------------------------------------------------------------------------
 # Model
@@ -225,21 +246,8 @@ optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 # Generate-only mode
 # -----------------------------------------------------------------------------
 if args.generate:
-    model.eval()
-    print("Generating 5000 tokens...")
-    context = torch.zeros((1, 1), dtype=torch.int64, device=device)
-    generated = model.generate(context, max_new_tokens=5000)
-    tokens_out = generated[0].tolist()
-
-    out_path = os.path.join(project_dir, "generated.txt")
-    with open(out_path, "w") as f:
-        f.write(",".join(str(t) for t in tokens_out))
-    print(f"Saved generated.txt ({len(tokens_out)} tokens)")
-
-    # Also decode to MIDI
-    import midi_decoder
-    midi_decoder.tokens_to_midi(tokens_out, os.path.join(project_dir, "generated.midi"))
-    print("Saved generated.midi")
+    for i in range(args.samples):
+        generate_and_save(i + 1)
     exit()
 
 # -----------------------------------------------------------------------------
@@ -266,20 +274,7 @@ torch.save(model.state_dict(), os.path.join(project_dir, "model.pth"))
 print(f"Model saved to model.pth")
 
 # -----------------------------------------------------------------------------
-# Generate sample
+# Generate samples
 # -----------------------------------------------------------------------------
-model.eval()
-context = torch.zeros((1, 1), dtype=torch.int64, device=device)
-generated = model.generate(context, max_new_tokens=5000)
-tokens_out = generated[0].tolist()
-
-# Save as comma-separated
-out_path = os.path.join(project_dir, "generated.txt")
-with open(out_path, "w") as f:
-    f.write(",".join(str(t) for t in tokens_out))
-print(f"Generated 5000 tokens saved to {out_path}")
-
-# Decode to MIDI
-import midi_decoder
-midi_decoder.tokens_to_midi(tokens_out, os.path.join(project_dir, "generated.midi"))
-print("Saved generated.midi")
+for i in range(args.samples):
+    generate_and_save(i + 1)
