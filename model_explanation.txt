@@ -1,0 +1,173 @@
+# AiMusic – Technical Overview
+
+**Version:** 2026‑04‑16
+
+---
+
+## (A) System Overview
+
+The repository implements a **decoder‑only transformer** that learns to generate
+MIDI token sequences.  Tokens are produced by the `midi_encoder.py` module using
+the REMI representation from the *miditok* library.  The trained model can be
+used to generate new musical material, which is then converted back to a MIDI
+file by `midi_decoder.py`.
+
+---
+
+## (B) Data Pipeline
+
+* **`midi_encoder.py`** – Provides `midi_to_tokens(path)` which returns a flat
+  list of integer tokens for a given ``.midi`` file.  Helper functions allow the
+  token list to be saved to or loaded from a comma‑separated ``.txt`` file.
+* **`midi_decoder.py`** – Implements `tokens_to_midi(tokens, out_path)` that
+  reconstructs a MIDI file from a token list using the same REMI schema.
+
+The training data (`data/train.txt` and `data/validate.txt`) are plain text
+files containing comma‑separated token IDs.  The same format is used for the
+generated samples.
+
+---
+
+## (C) Model Architecture – `model_def.py`
+
+Only the neural‑network definition lives in this module; there is **no** data
+loading, training, or inference code.
+
+* **`Head`** – Implements a single self‑attention head with query, key and value
+  linear projections, a causal mask (`tril`) and dropout.
+* **`MultiHeadAttention`** – Stacks `n_head` instances of `Head`.  The head size
+  is derived from the embedding dimension (`n_embed // n_head`).  The concatenated
+  output is projected back to `n_embed` dimensions.
+* **`FeedForward`** – Two‑layer MLP with a ReLU activation and dropout.  The
+  hidden dimension is `4 * n_embed`.
+* **`TransformerBlock`** – One self‑attention layer followed by a feed‑forward
+  layer, each wrapped with a residual connection and layer‑norm.
+* **`BigramLanguageModel`** – The full decoder‑only transformer:
+  * Token embedding (`nn.Embedding(vocab_size, n_embed)`).
+  * Positional embedding (`nn.Embedding(block_size, n_embed)`).
+  * A stack of `n_layer` `TransformerBlock`s.
+  * Final layer‑norm and linear head that maps to the vocabulary size.
+  * `forward(idx, targets=None)` returns logits and an optional cross‑entropy
+    loss.
+  * `generate(idx, max_new_tokens)` performs autoregressive generation by
+    repeatedly feeding the last `block_size` tokens back into the model.
+
+All architectural hyper‑parameters are defined in **`config.py`** and imported
+as `config.N_EMBED`, `config.N_HEAD`, `config.N_LAYER`, `config.DROPOUT`, etc.
+
+---
+
+## (D) Training Pipeline – `training.py`
+
+The training module orchestrates the full learning process:
+
+1. **Data preparation** – `_prepare_data(project_dir)` loads the token files
+   from ``<project_root>/data`` and computes ``vocab_size``.
+2. **Model creation** – `create_model(vocab_size, device)` from `model_def.py`
+   is called with the device from `config.DEVICE`.
+3. **Optimizer** – AdamW with learning rate `config.LEARNING_RATE`.
+4. **Batch sampling** – `get_batch(split, train_data, val_data)` returns a
+   ``(batch_size, block_size)`` tensor pair on the configured device.
+5. **Training loop** – Runs for ``max_iters`` (default from `config.MAX_ITERS`
+   unless overridden via CLI).  Every ``eval_interval`` steps the
+   `estimate_loss` helper evaluates the average loss over ``eval_iters``
+   validation batches.
+6. **Checkpoint** – After training the model state dict is saved to
+   ``<project_root>/model.pth``.
+7. **Optional post‑training generation** – If ``samples > 0`` the module lazily
+   imports `inference.generate_and_save` and creates the requested number of
+   samples.
+
+All constants used in this file are imported from `config.py`; there are no
+hard‑coded numbers.
+
+---
+
+## (E) Inference Engine – `inference.py`
+
+Provides a **stateless** API for generation:
+
+* `load_model(model_path, project_dir)` – Determines ``vocab_size`` from the
+  training data, builds a model via `create_model`, loads the checkpoint and
+  puts the model in ``eval`` mode.
+* `generate_and_save(sample_idx, max_tokens=config.MAX_TOKENS, *, model_path,
+  project_dir)` – Generates a token sequence, writes the raw token list to
+  ``sample/sample_<idx>.txt`` and converts it to a MIDI file ``sample/sample_<idx>.midi``
+  using `midi_decoder.tokens_to_midi`.
+
+Both functions use the device and other hyper‑parameters from `config.py`.
+
+---
+
+## (F) Public API Layer – `use_model.py` ⭐
+
+`use_model.py` is the **entry point intended for external users** (scripts, web
+services, notebooks, etc.).  It mirrors the original `train_model.py` CLI but is
+named to emphasise its role as a public interface.
+
+* **CLI arguments** – Identical to `train_model.py`:
+  * ``--resume <path>`` – resume training from a checkpoint.
+  * ``--generate <path>`` – generation‑only mode.
+  * ``--iters <int>`` – override the default number of training iterations.
+  * ``--samples <int>`` – number of samples to generate after training or in
+    generation‑only mode.
+* **Functions** – `_cli_train` forwards the arguments to `training.train`; `_cli_generate`
+  calls `inference.generate_and_save` for each requested sample.
+* **Execution** – When the module is run as a script (`python use_model.py`),
+  it resolves the project root, parses arguments and dispatches to the appropriate
+  helper.
+
+The module does **not** perform any caching of the model; each generation call
+loads the checkpoint anew via `inference.load_model`.  This design keeps the API
+simple and side‑effect free, making it suitable for repeated calls from a web
+service.
+
+---
+
+## (G) Configuration System – `config.py`
+
+All hyper‑parameters, architecture settings, device selection and data paths are
+centralised in this file.  Modules import the required constants, e.g.:
+
+```python
+from config import BATCH_SIZE, DEVICE
+```
+
+Key groups:
+
+* **Device** – `DEVICE` selects ``cuda`` if available, otherwise ``cpu``.
+* **Training hyper‑parameters** – `BATCH_SIZE`, `BLOCK_SIZE`, `MAX_ITERS`,
+  `EVAL_INTERVAL`, `LEARNING_RATE`, `EVAL_ITERS`, `DROPOUT`.
+* **Model architecture** – `N_EMBED`, `N_HEAD`, `N_LAYER`.
+* **Data configuration** – `PROJECT_ROOT`, `DATA_DIR`, `SAMPLE_DIR`.
+* **Generation defaults** – `MAX_TOKENS` (default number of tokens generated).
+
+By moving every constant here we guarantee that the behaviour of the training
+and inference pipelines is identical to the original script while providing a
+single source of truth for future adjustments.
+
+---
+
+## (H) Full Execution Flow
+
+1. **User entry** – Run `python use_model.py` (or import the module) with the
+   desired CLI flags.
+2. **Data loading** – `training._prepare_data` reads ``train.txt`` and
+   ``validate.txt`` from ``<project_root>/data``.
+3. **Model construction** – `model_def.create_model` builds a `BigramLanguageModel`
+   using the configuration values.
+4. **Training (optional)** – The training loop updates model weights and saves
+   ``model.pth``.
+5. **Generation** – `inference.generate_and_save` loads the checkpoint, runs
+   autoregressive generation (`model.generate`) for ``MAX_TOKENS`` tokens, and
+   writes the token list and the decoded MIDI file to ``<project_root>/sample``.
+6. **Result** – Users obtain ``sample_<idx>.txt`` (raw tokens) and
+   ``sample_<idx>.midi`` (playable MIDI).
+
+All steps respect the constants defined in `config.py`; changing a value in
+that file automatically propagates throughout the codebase.
+
+---
+
+*End of document.*
+
