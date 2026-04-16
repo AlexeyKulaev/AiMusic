@@ -18,6 +18,8 @@
     </div>
     <div id="result" class="hidden">
         <p>Generated! <a id="downloadLink" href="#">Download MIDI</a></p>
+        <button id="playBtn" style="margin-left:1rem;">Play</button>
+        <audio id="audioPlayer" controls style="display:none; margin-top:0.5rem;"></audio>
     </div>
 
     <script>
@@ -37,10 +39,17 @@
             const data = await resp.json();
             const sampleIdx = data.sample_idx;
             downloadLink.href = `/download/${sampleIdx}`;
+            // Show play button and set up audio source
+            const playBtn = document.getElementById('playBtn');
+            const audioPlayer = document.getElementById('audioPlayer');
+            playBtn.onclick = () => {
+                audioPlayer.src = `/audio/${sampleIdx}`;
+                audioPlayer.style.display = 'block';
+                audioPlayer.play();
+            };
             resultDiv.classList.remove('hidden');
             generateBtn.disabled = false;
         });
     </script>
 </body>
 </html>
-

@@ -18,6 +18,7 @@ import string
 from pathlib import Path
 
 from flask import Flask, jsonify, request, send_from_directory, render_template
+import subprocess
 
 # Import the generation helper – do **not** modify ``inference.py``.
 from inference import generate_and_save
@@ -94,6 +95,20 @@ def generate():
         project_dir=str(PROJECT_ROOT),
     )
 
+    # Convert the generated MIDI to WAV using TiMidity++ for accurate playback.
+    midi_path = SAMPLE_DIR / f"sample_{sample_idx}.midi"
+    wav_path = SAMPLE_DIR / f"sample_{sample_idx}.wav"
+    try:
+        subprocess.run(
+            ["timidity", str(midi_path), "-Ow", "-o", str(wav_path)],
+            check=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except Exception as e:
+        # If conversion fails, log but do not prevent the API response.
+        print(f"TiMidity conversion failed for {midi_path}: {e}")
+
     return jsonify({"sample_idx": sample_idx})
 
 
@@ -114,7 +129,22 @@ def download(sample_idx: str):
     )
 
 
+@app.route('/audio/<sample_idx>', methods=['GET'])
+def audio(sample_idx: str):
+    """Serve the WAV audio rendered by TiMidity++.
+
+    The WAV file is generated during the ``/generate`` call and stored alongside
+    the MIDI file.  It is streamed with the correct ``audio/wav`` MIME type.
+    """
+    filename = f"sample_{sample_idx}.wav"
+    return send_from_directory(
+        directory=SAMPLE_DIR,
+        path=filename,
+        as_attachment=True,
+        mimetype='audio/wav'
+    )
+
+
 if __name__ == '__main__':
     # Bind to localhost only – this satisfies the strict local‑only requirement.
     app.run(host='127.0.0.1', port=5000, debug=False)
-
