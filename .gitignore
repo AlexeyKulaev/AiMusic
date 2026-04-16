@@ -31,8 +31,6 @@ generated.midi
 # Generated samples
 sample/
 
-# Model checkpoints
-*.pth
 
 # Token data (large)
 data/
