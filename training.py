@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 """Training pipeline for the MIDI transformer.
 
-This module contains all logic required to train the model – data loading,
+This module contains all logic required to train the model - data loading,
 batch sampling, loss estimation, the training loop and checkpoint saving.
 It purposefully contains **no** inference or generation code so that it can be
-imported without side‑effects.
+imported without sideeffects.
 """
 
 import os
@@ -32,10 +31,7 @@ dropout = config.DROPOUT
 
 
 def _load_tokens(data_dir: str, filename: str) -> list[int]:
-    """Read a comma‑separated token file.
-
-    The original script stored raw integer tokens in ``train.txt`` and
-    ``validate.txt`` inside a ``data`` directory next to the source files.
+    """Read a comma-separated token file.
     """
     path = os.path.join(data_dir, filename)
     with open(path, "r") as f:
@@ -53,9 +49,9 @@ def _prepare_data(project_dir: str):
 
 
 def get_batch(split: str, train_data: torch.Tensor, val_data: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
-    """Sample a batch of ``block_size`` tokens.
+    """Sample a batch of block_size tokens.
 
-    ``split`` must be either ``"train"`` or ``"val"``.
+    split must be either "train" or "val".
     """
     data = train_data if split == "train" else val_data
     ix = torch.randint(len(data) - block_size, (batch_size,))
@@ -66,7 +62,7 @@ def get_batch(split: str, train_data: torch.Tensor, val_data: torch.Tensor) -> t
 
 @torch.no_grad()
 def estimate_loss(model: nn.Module, train_data: torch.Tensor, val_data: torch.Tensor) -> dict:
-    """Compute average loss over ``eval_iters`` batches for train and validation."""
+    """Compute average loss over eval_iters batches for train and validation."""
     out = {}
     model.eval()
     for split in ["train", "val"]:
@@ -86,12 +82,12 @@ def train(project_dir: str, resume_path: str | None = None, max_iters_override: 
     Parameters
     ----------
     project_dir:
-        Root directory of the repository – used to locate the ``data`` folder and to
+        Root directory of the repository - used to locate the data folder and to
         store the final checkpoint.
     resume_path:
-        Optional path to a ``.pth`` checkpoint to resume training from.
+        Optional path to a .pth checkpoint to resume training from.
     max_iters_override:
-        If supplied, overrides the default ``max_iters`` hyper‑parameter.
+        If supplied, overrides the default max_iters hyper‑parameter.
     samples:
         Number of samples to generate after training (delegated to the inference
         module). Generation is performed by calling :func:`inference.generate_and_save`.

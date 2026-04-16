@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(/home/alex/documents/projects/aimusic/aimusic/venv/bin/python *)",
-      "Bash(tr *)"
-    ]
-  },
-  "$version": 3
-}

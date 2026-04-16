@@ -1,14 +1,13 @@
-# -*- coding: utf-8 -*-
 """Entry point for training or inference.
 
-This thin wrapper parses command‑line arguments and delegates to the dedicated
+This thin wrapper parses command-line arguments and delegates to the dedicated
 modules:
 
-* :pymod:`training` – contains the full training pipeline.
-* :pymod:`inference` – stateless generation utilities.
+* :pymod: training - contains the full training pipeline.
+* :pymod:inference - stateless generation utilities.
 
-Importing this file has **no side effects**; the heavy work only runs when the
-module is executed as a script (``python train_model.py``).
+Importing this file has no side effects; the heavy work only runs when the
+module is executed as a script (python train_model.py).
 """
 
 import argparse
@@ -30,9 +29,9 @@ def _parse_args() -> argparse.Namespace:
 def _cli_train(args: argparse.Namespace, project_dir: str) -> None:
     """Run the training pipeline.
 
-    ``args.resume`` may be ``None`` – in that case training starts from scratch.
-    ``args.iters`` overrides the default ``max_iters`` defined in
-    :pymod:`training`.
+    args.resume may be None - in that case training starts from scratch.
+    args.iters overrides the default max_iters defined in
+    :pymod:training.
     """
     train(
         project_dir=project_dir,
@@ -43,7 +42,7 @@ def _cli_train(args: argparse.Namespace, project_dir: str) -> None:
 
 
 def _cli_generate(args: argparse.Namespace, project_dir: str) -> None:
-    """Generate ``args.samples`` MIDI files using the provided checkpoint.
+    """Generate args.samples MIDI files using the provided checkpoint.
     """
     for i in range(args.samples):
         generate_and_save(i + 1, model_path=args.generate, project_dir=project_dir)

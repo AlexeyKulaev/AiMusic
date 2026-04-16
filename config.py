@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 """Centralized configuration for the AiMusic project.
 
-All hyper‑parameters, model architecture settings, device selection and data
+All hyperparameters, model architecture settings, device selection and data
 paths are defined here.  Import this module wherever a constant is required to
-avoid hard‑coded values scattered across the codebase.
+avoid hardcoded values scattered across the codebase.
 """
 
 import os
@@ -15,7 +14,7 @@ import torch
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 # -----------------------------------------------------------------------------
-# Training hyper‑parameters
+# Training hyperparameters
 # -----------------------------------------------------------------------------
 BATCH_SIZE = 16
 BLOCK_SIZE = 16

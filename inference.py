@@ -1,10 +1,4 @@
-# -*- coding: utf-8 -*-
-"""Stateless inference utilities.
-
-The original script mixed training and generation logic in a single file. This
-module isolates the generation side so that it can be imported and called from
-anywhere (e.g. a FastAPI endpoint) without triggering training code.
-"""
+"""Generation module"""
 
 import os
 import torch
@@ -13,24 +7,19 @@ from torch.nn import functional as F
 from model_def import create_model
 import config
 
-# The original project stores token‑to‑MIDI conversion in ``midi_decoder``.
+# The project stores token‑to‑MIDI conversion in midi_decoder.
 import midi_decoder
 
 
 def _load_tokens(data_dir: str, filename: str) -> list[int]:
-    """Utility to read comma‑separated token files (same format as training)."""
+    """Utility to read comma-separated token files (same format as training)."""
     path = os.path.join(data_dir, filename)
     with open(path, "r") as f:
         return [int(x) for x in f.read().split(",")]
 
 
 def load_model(model_path: str, project_dir: str) -> torch.nn.Module:
-    """Load a checkpoint and return a ready‑to‑use model.
-
-    The function determines ``vocab_size`` by inspecting the training data –
-    this mirrors the behaviour of the original script and guarantees that the
-    model dimensions match the checkpoint.
-    """
+    """Load a checkpoint and return a ready-to-use model."""
     data_dir = os.path.join(project_dir, "data")
     train_tokens = _load_tokens(data_dir, "train.txt")
     val_tokens = _load_tokens(data_dir, "validate.txt")
@@ -46,10 +35,10 @@ def load_model(model_path: str, project_dir: str) -> torch.nn.Module:
 
 
 def generate_and_save(sample_idx: int, max_tokens: int = config.MAX_TOKENS, *, model_path: str, project_dir: str):
-    """Generate a MIDI sample and write both token and ``.midi`` files.
+    """Generate a MIDI sample and write both token and .midi files.
 
-    The output files are placed in ``<project_dir>/sample`` and follow the
-    naming convention ``sample_<idx>.txt`` and ``sample_<idx>.midi`` as required
+    The output files are placed in <project_dir>/sample and follow the
+    naming convention sample_<idx>.txt and sample_<idx>.midi as required
     by the original code base.
     """
     model = load_model(model_path, project_dir)

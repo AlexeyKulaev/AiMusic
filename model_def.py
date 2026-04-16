@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 """
 Model definition module.
 
 Contains only the architecture of the transformer used for MIDI token generation.
-No training, data loading, or inference logic lives here – those are delegated to
-`training.py` and `inference.py` respectively.
+No training, data loading, or inference logic lives here  those are delegated to
+training.py and inference.py respectively.
 """
 
 import torch
@@ -19,7 +18,7 @@ class Head(nn.Module):
         self.key = nn.Linear(n_embed, head_size, bias=False)
         self.query = nn.Linear(n_embed, head_size, bias=False)
         self.value = nn.Linear(n_embed, head_size, bias=False)
-        # Causal mask – same shape as original implementation
+        # Causal mask  same shape as original implementation
         self.register_buffer("tril", torch.tril(torch.ones(block_size, block_size)))
         self.dropout = nn.Dropout(dropout)
 
@@ -79,11 +78,8 @@ class TransformerBlock(nn.Module):
         return x
 
 
-class BigramLanguageModel(nn.Module):
-    """Decoder‑only transformer used for MIDI token generation.
-
-    The implementation mirrors the original `train_model.py` exactly – only the
-    surrounding concerns have been stripped away.
+class Model(nn.Module):
+    """Decoder-only transformer used for MIDI token generation.
     """
 
     def __init__(self, vocab_size: int, *, n_embed: int = config.N_EMBED,
@@ -120,7 +116,7 @@ class BigramLanguageModel(nn.Module):
     def generate(self, idx: torch.Tensor, max_new_tokens: int) -> torch.Tensor:
         """Autoregressive generation.
 
-        Mirrors the original method – repeatedly feeds the last `block_size`
+        Mirrors the original method  repeatedly feeds the last block_size
         tokens back into the model and samples the next token.
         """
         for _ in range(max_new_tokens):
@@ -133,10 +129,10 @@ class BigramLanguageModel(nn.Module):
         return idx
 
 
-def create_model(vocab_size: int, device: torch.device | str = config.DEVICE) -> BigramLanguageModel:
+def create_model(vocab_size: int, device: torch.device | str = config.DEVICE) -> Model:
     """Factory helper used by training and inference modules.
 
     Returns a model instance placed on the requested device.
     """
-    model = BigramLanguageModel(vocab_size).to(device)
+    model = Model(vocab_size).to(device)
     return model

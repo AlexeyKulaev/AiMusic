@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 MIDI Encoder - Convert .midi files to list of numbers using miditok (REMI)
 """
@@ -7,15 +6,7 @@ from miditok import REMI
 
 
 def midi_to_tokens(midi_path: str) -> list[int]:
-    """
-    Encode a MIDI file to a flat list of integer tokens using REMI encoding.
-
-    Args:
-        midi_path: Path to the MIDI file
-
-    Returns:
-        Flat list of integer tokens
-    """
+    """Encode a MIDI file to a flat list of integer tokens using REMI encoding."""
     tokenizer = REMI()
     sequences = tokenizer.encode(midi_path)
     # Flatten all track ids into one list
