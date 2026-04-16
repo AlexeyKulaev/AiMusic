@@ -13,7 +13,7 @@ The model was trained on the **MAESTRO dataset**, a high-quality collection of a
 
 ---
 
-## 🚀 Key Idea
+## Key Idea
 
 The core of AiMusic is a **decoder-only Transformer model trained from scratch on symbolic music data**.
 
@@ -23,7 +23,7 @@ The model operates on a **tokenized representation of MIDI files (REMI format)**
 
 ---
 
-## 🧠 Model Overview (Custom Sequence Modeling Architecture)
+## Model Overview (Custom Sequence Modeling Architecture)
 
 The neural network is a **custom-built decoder-only Transformer**, implemented from first principles and adapted specifically for symbolic music generation.
 
@@ -77,7 +77,7 @@ The combination of attention + residual learning enables deep scaling without lo
 
 ---
 
-## 🎼 Data Pipeline
+## Data Pipeline
 
 ### Dataset
 
@@ -96,7 +96,7 @@ It is widely used for symbolic music generation research and provides rich tempo
 
 ---
 
-## 🏋️ Training Pipeline
+## Training Pipeline
 
 The model is trained using a fully custom training loop:
 
@@ -110,7 +110,7 @@ Training data consists of tokenized MIDI sequences stored in plain text format d
 
 ---
 
-## ⚙️ Inference System
+## Inference System
 
 The inference engine:
 
@@ -123,7 +123,7 @@ All outputs are reproducible via deterministic sample IDs.
 
 ---
 
-## 🌐 Web Application
+## Web Application
 
 AiMusic includes a lightweight Flask-based web interface.
 
@@ -139,7 +139,7 @@ Generated MIDI files are converted into WAV audio using TiMidity++, ensuring con
 
 ---
 
-## 🧩 Tech Stack
+## Tech Stack
 
 - Python 3.10+
 - PyTorch
@@ -151,7 +151,7 @@ Generated MIDI files are converted into WAV audio using TiMidity++, ensuring con
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ```bash
 git clone https://github.com/yourusername/AiMusic.git
