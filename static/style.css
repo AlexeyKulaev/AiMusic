@@ -1,0 +1,34 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 2rem;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+}
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#result {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.hidden {
+    display: none;
+}
+

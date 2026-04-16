@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>AI Music Generator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>AI Music Generator</h1>
+    <div class="controls">
+        <label for="lengthSelect">Composition length:</label>
+        <select id="lengthSelect">
+            <option value="short">Short</option>
+            <option value="medium">Medium</option>
+            <option value="long">Long</option>
+        </select>
+        <button id="generateBtn">Generate</button>
+    </div>
+    <div id="result" class="hidden">
+        <p>Generated! <a id="downloadLink" href="#">Download MIDI</a></p>
+    </div>
+
+    <script>
+        const generateBtn = document.getElementById('generateBtn');
+        const lengthSelect = document.getElementById('lengthSelect');
+        const resultDiv = document.getElementById('result');
+        const downloadLink = document.getElementById('downloadLink');
+
+        generateBtn.addEventListener('click', async () => {
+            generateBtn.disabled = true;
+            const length = lengthSelect.value;
+            const resp = await fetch('/generate', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({length})
+            });
+            const data = await resp.json();
+            const sampleIdx = data.sample_idx;
+            downloadLink.href = `/download/${sampleIdx}`;
+            resultDiv.classList.remove('hidden');
+            generateBtn.disabled = false;
+        });
+    </script>
+</body>
+</html>
+
