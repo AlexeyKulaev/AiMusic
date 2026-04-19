@@ -1,0 +1,36 @@
+BATCH_SIZE = 64
+BLOCK_SIZE = 128
+MAX_ITERS = 500
+EVAL_INTERVAL = 300
+LEARNING_RATE = 1e-3
+EVAL_ITERS = 100
+DROPOUT = 0.2
+
+# -----------------------------------------------------------------------------
+# Model architecture parameters
+# -----------------------------------------------------------------------------
+N_EMBED = 64 * 6
+N_HEAD = 6
+N_LAYER = 6
+
+
+
+Training on cuda for 5000 iterations…
+step 0: train loss 5.5373, val loss 5.5350
+step 300: train loss 2.5844, val loss 2.6370
+step 600: train loss 2.4718, val loss 2.5207
+step 900: train loss 2.4253, val loss 2.4775
+step 1200: train loss 2.3902, val loss 2.4442
+step 1500: train loss 2.3583, val loss 2.4179
+step 1800: train loss 2.3323, val loss 2.3824
+step 2100: train loss 2.2963, val loss 2.3461
+step 2400: train loss 2.2665, val loss 2.3144
+step 2700: train loss 2.2380, val loss 2.2879
+step 3000: train loss 2.2170, val loss 2.2731
+step 3300: train loss 2.2010, val loss 2.2589
+step 3600: train loss 2.1846, val loss 2.2404
+step 3900: train loss 2.1680, val loss 2.2222
+step 4200: train loss 2.1507, val loss 2.2106
+step 4500: train loss 2.1354, val loss 2.1958
+step 4800: train loss 2.1320, val loss 2.1781
+step 4999: train loss 2.1222, val loss 2.1691

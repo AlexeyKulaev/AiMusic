@@ -1,0 +1,93 @@
+BATCH_SIZE = 64
+BLOCK_SIZE = 256
+MAX_ITERS = 500
+EVAL_INTERVAL = 300
+LEARNING_RATE = 1e-3
+EVAL_ITERS = 100
+DROPOUT = 0.2
+
+# -----------------------------------------------------------------------------
+# Model architecture parameters
+# -----------------------------------------------------------------------------
+N_EMBED = 64 * 6
+N_HEAD = 6
+N_LAYER = 6
+
+
+
+
+
+Training on cuda for 50000 iterations…
+step 0: train loss 5.6295, val loss 5.6302
+step 700: train loss 2.4237, val loss 2.4702
+step 1400: train loss 2.3321, val loss 2.3919
+step 2100: train loss 2.2128, val loss 2.2693
+step 2800: train loss 2.1412, val loss 2.1998
+step 3500: train loss 2.0803, val loss 2.1352
+step 4200: train loss 2.0313, val loss 2.0998
+step 4900: train loss 1.9997, val loss 2.0595
+step 5600: train loss 1.9673, val loss 2.0401
+step 6300: train loss 1.9502, val loss 2.0216
+step 7000: train loss 1.9325, val loss 2.0074
+step 7700: train loss 1.9169, val loss 1.9884
+step 8400: train loss 1.8923, val loss 1.9712
+step 9100: train loss 1.8787, val loss 1.9635
+step 9800: train loss 1.8662, val loss 1.9565
+step 10500: train loss 1.8573, val loss 1.9442
+step 11200: train loss 1.8519, val loss 1.9418
+step 11900: train loss 1.8382, val loss 1.9329
+step 12600: train loss 1.8260, val loss 1.9222
+step 13300: train loss 1.8300, val loss 1.9180
+step 14000: train loss 1.8186, val loss 1.9118
+step 14700: train loss 1.8104, val loss 1.9090
+step 15400: train loss 1.7979, val loss 1.9026
+step 16100: train loss 1.7894, val loss 1.8946
+step 16800: train loss 1.7943, val loss 1.8872
+step 17500: train loss 1.7777, val loss 1.8858
+step 18200: train loss 1.7664, val loss 1.8831
+step 18900: train loss 1.7711, val loss 1.8879
+step 19600: train loss 1.7564, val loss 1.8646
+step 20300: train loss 1.7553, val loss 1.8737
+step 21000: train loss 1.7484, val loss 1.8575
+step 21700: train loss 1.7379, val loss 1.8668
+step 22400: train loss 1.7375, val loss 1.8649
+step 23100: train loss 1.7407, val loss 1.8586
+step 23800: train loss 1.7272, val loss 1.8513
+step 24500: train loss 1.7299, val loss 1.8544
+step 25200: train loss 1.7200, val loss 1.8540
+step 25900: train loss 1.7195, val loss 1.8484
+step 26600: train loss 1.7177, val loss 1.8515
+step 27300: train loss 1.7118, val loss 1.8461
+step 28000: train loss 1.7115, val loss 1.8369
+step 28700: train loss 1.7029, val loss 1.8409
+step 29400: train loss 1.7033, val loss 1.8409
+step 30100: train loss 1.6949, val loss 1.8441
+step 30800: train loss 1.6981, val loss 1.8363
+step 31500: train loss 1.6967, val loss 1.8373
+step 32200: train loss 1.6795, val loss 1.8292
+step 32900: train loss 1.6843, val loss 1.8319
+step 33600: train loss 1.6816, val loss 1.8337
+step 34300: train loss 1.6818, val loss 1.8267
+step 35000: train loss 1.6789, val loss 1.8323
+step 35700: train loss 1.6670, val loss 1.8251
+step 36400: train loss 1.6776, val loss 1.8246
+step 37100: train loss 1.6626, val loss 1.8242
+step 37800: train loss 1.6680, val loss 1.8270
+step 38500: train loss 1.6613, val loss 1.8220
+step 39200: train loss 1.6697, val loss 1.8154
+step 39900: train loss 1.6521, val loss 1.8141
+step 40600: train loss 1.6600, val loss 1.8182
+step 41300: train loss 1.6485, val loss 1.8154
+step 42000: train loss 1.6491, val loss 1.8098
+step 42700: train loss 1.6516, val loss 1.8156
+step 43400: train loss 1.6440, val loss 1.8255
+step 44100: train loss 1.6466, val loss 1.8106
+step 44800: train loss 1.6411, val loss 1.8114
+step 45500: train loss 1.6438, val loss 1.8118
+step 46200: train loss 1.6390, val loss 1.7999
+step 46900: train loss 1.6370, val loss 1.8091
+step 47600: train loss 1.6322, val loss 1.8061
+step 48300: train loss 1.6334, val loss 1.8025
+step 49000: train loss 1.6349, val loss 1.8112
+step 49700: train loss 1.6250, val loss 1.7995
+step 49999: train loss 1.6255, val loss 1.8051

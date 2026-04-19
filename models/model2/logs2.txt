@@ -1,0 +1,39 @@
+# -----------------------------------------------------------------------------
+# Training hyperparameters
+# -----------------------------------------------------------------------------
+BATCH_SIZE = 64
+BLOCK_SIZE = 256
+MAX_ITERS = 20000
+EVAL_INTERVAL = 1000
+LEARNING_RATE = 4e-4
+EVAL_ITERS = 100
+DROPOUT = 0.2
+
+# -----------------------------------------------------------------------------
+# Model architecture parameters
+# -----------------------------------------------------------------------------
+N_EMBED = 256  * 6
+N_HEAD = 6
+N_LAYER = 6
+
+step 0: train loss 5.5533, val loss 5.5513
+step 1000: train loss 2.3393, val loss 2.3941
+step 2000: train loss 2.1215, val loss 2.1878
+step 3000: train loss 1.9829, val loss 2.0524
+step 4000: train loss 1.9097, val loss 1.9954
+step 5000: train loss 1.8467, val loss 1.9515
+step 6000: train loss 1.8014, val loss 1.9129
+step 7000: train loss 1.7648, val loss 1.8977
+step 8000: train loss 1.7177, val loss 1.8804
+step 9000: train loss 1.6719, val loss 1.8501
+step 10000: train loss 1.6444, val loss 1.8400
+step 11000: train loss 1.6116, val loss 1.8403
+step 12000: train loss 1.5759, val loss 1.8234
+step 13000: train loss 1.5474, val loss 1.8275
+step 14000: train loss 1.5232, val loss 1.8178
+step 15000: train loss 1.4951, val loss 1.8255
+step 16000: train loss 1.4636, val loss 1.8151
+step 17000: train loss 1.4422, val loss 1.8386
+step 18000: train loss 1.4262, val loss 1.8301
+step 19000: train loss 1.4007, val loss 1.8270
+step 19999: train loss 1.3760, val loss 1.8494

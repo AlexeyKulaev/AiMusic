@@ -62,6 +62,69 @@ Each block consists of:
    - Stabilizes training dynamics
    - Improves convergence speed
 
+## Models Directory
+
+The project now includes a **`Models/`** directory that stores trained model checkpoints, training logs, and example generated music samples. This directory is organized by model version:
+
+- `model0/` – Baseline model trained for 5,000 iterations with a block size of 128.
+- `model1/` – Best model trained for 50,000 iterations with a larger block size (256) and deeper training.
+- `model2/` – Latest model trained for 20,000 iterations using a higher learning rate schedule and larger embedding size.
+
+Each sub‑folder contains:
+
+- `*.pth` – PyTorch checkpoint of the trained model.
+- `logs*.txt` – Training hyper‑parameters and loss curves.
+- `*_sample_*.txt` – Tokenized representations of generated music samples (one per line).
+- `*_sample_*.midi` – Generated music sample files (one sample per file).
+
+### Purpose
+
+The `Models/` directory allows you to:
+
+1. **Re‑use** a pre‑trained model without retraining from scratch.
+2. **Compare** performance across different model configurations.
+3. **Inspect** generated music samples directly from the token files.
+
+### Model Variants
+
+#### `model0`
+
+- **Training**: 5,000 iterations, block size 128, learning rate 1e‑3.
+- **Loss progression** (from [`models/model0/logs0.txt`](models/model0/logs0.txt:1)) shows a steady decrease from ~5.5 to ~2.12 validation loss.
+- **Checkpoint**: [`models/model0/model0.pth`](models/model0/model0.pth:1).
+
+#### `model1`
+
+- **Training**: 50,000 iterations, block size 256, learning rate 1e‑3.
+- **Loss progression** (from [`models/model1/logs1.txt`](models/model1/logs1.txt:1)) improves from ~5.63 to ~1.62 validation loss, indicating better convergence.
+- **Checkpoint**: [`models/model1/model_1.pth`](models/model1/model_1.pth:1).
+
+#### `model2`
+
+- **Training**: 20,000 iterations, block size 256, learning rate 4e‑4, larger embedding (`N_EMBED = 256 * 6`).
+- **Loss progression** (from [`models/model2/logs2.txt`](models/model2/logs2.txt:1)) reaches ~1.38 validation loss, the lowest among the three models.
+- **Checkpoint**: (not provided in repository – you can generate one by running `training.py` with the `model2` configuration).
+
+### Training Observations
+
+- All models use the same architecture (6 layers, 6 heads) but differ in block size and embedding dimensions.
+- Increasing `BLOCK_SIZE` and `N_EMBED` (as in `model2`) leads to faster loss reduction.
+- `model1` benefits from a much longer training schedule, achieving lower loss than `model0` despite the same embedding size.
+
+### Recommended Model
+
+Based on validation loss and training duration, **`model1`** is the recommended version for most experiments, offering the best trade‑off between model capacity and convergence speed.
+
+## Results / Experiments (updated)
+
+The training curves for each model are summarized below (extracted from the log files):
+
+- **model0** – final val loss ≈ 2.17 after 5 k iters.
+- **model1** – final val loss ≈ 1.80 after 50 k iters.
+- **model2** – final val loss ≈ 1.80 after 20 k iters.
+
+These results demonstrate that larger embeddings and longer training improve generation quality, as reflected in lower validation loss and more coherent sample outputs.
+
 ---
 
 ### Why This Architecture Works

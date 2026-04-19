@@ -16,8 +16,8 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 # -----------------------------------------------------------------------------
 # Training hyperparameters
 # -----------------------------------------------------------------------------
-BATCH_SIZE = 16
-BLOCK_SIZE = 16
+BATCH_SIZE = 64
+BLOCK_SIZE = 256
 MAX_ITERS = 500
 EVAL_INTERVAL = 300
 LEARNING_RATE = 1e-3
@@ -27,9 +27,9 @@ DROPOUT = 0.2
 # -----------------------------------------------------------------------------
 # Model architecture parameters
 # -----------------------------------------------------------------------------
-N_EMBED = 16 * 6
+N_EMBED = 64 * 6
 N_HEAD = 6
-N_LAYER = 1
+N_LAYER = 6
 
 # -----------------------------------------------------------------------------
 # Data configuration (paths are resolved relative to this file's directory)
