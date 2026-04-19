@@ -96,13 +96,13 @@ The `Models/` directory allows you to:
 #### `model1`
 
 - **Training**: 50,000 iterations, block size 256, learning rate 1e‑3.
-- **Loss progression** (from [`models/model1/logs1.txt`](models/model1/logs1.txt:1)) improves from ~5.63 to ~1.62 validation loss, indicating better convergence.
+- **Loss progression** (from [`models/model1/logs1.txt`](models/model1/logs1.txt:1)) improves from ~5.63 to ~1.80 validation loss, indicating better convergence.
 - **Checkpoint**: [`models/model1/model_1.pth`](models/model1/model_1.pth:1).
 
 #### `model2`
 
 - **Training**: 20,000 iterations, block size 256, learning rate 4e‑4, larger embedding (`N_EMBED = 256 * 6`).
-- **Loss progression** (from [`models/model2/logs2.txt`](models/model2/logs2.txt:1)) reaches ~1.38 validation loss, the lowest among the three models.
+- **Loss progression** (from [`models/model2/logs2.txt`](models/model2/logs2.txt:1)) reaches ~1.80 validation loss and ~1.62 train loss because of overfitting
 - **Checkpoint**: (not provided in repository – you can generate one by running `training.py` with the `model2` configuration).
 
 ### Training Observations
