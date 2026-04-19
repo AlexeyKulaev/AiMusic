@@ -85,6 +85,31 @@ The `Models/` directory allows you to:
 2. **Compare** performance across different model configurations.
 3. **Inspect** generated music samples directly from the token files.
 
+## Using Your Own Model
+
+To run this project with your own trained music generation model, follow these steps:
+
+1. Select a model
+- Go to the `Models` folder in the repository
+- Choose a compatible model file (`.pth` format)
+
+2. Move the model
+- Copy the selected model file into the root directory of the project
+- Rename the file to: `model.pth`
+
+⚠️ Important: Model requirements
+- The application expects the model file to be named exactly `model.pth`
+- Make sure the model architecture matches the backend inference code
+- Incompatible models may cause errors or fail during generation
+
+3. Update model configuration
+- Inside the selected model folder locate the `logs.txt` file
+- At the top of this file, you will find the hyperparameters used during training
+- Open `config.py` inside the same model folder
+- Update the hyperparameters in `config.py` to match the values from `logs.txt`
+
+This step is required to ensure the model runs correctly and produces consistent results.
+
 ### Model Variants
 
 #### `model0`
@@ -132,7 +157,6 @@ These results demonstrate that larger embeddings and longer training improve gen
 The model captures:
 
 - long-range musical structure (rhythm, repetition)
-- harmonic progression
 - local note dependencies
 - temporal consistency
 
