@@ -87,7 +87,7 @@ The `Models/` directory allows you to:
 
 ## Using Your Own Model
 
-To run this project with your own trained music generation model, follow these steps:
+To run this project with another trained music generation model, follow these steps:
 
 1. Select a model
 - Go to the `Models` folder in the repository
