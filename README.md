@@ -7,6 +7,52 @@ The model was trained on the **MAESTRO dataset**, a high-quality collection of a
 
 ---
 
+## Examples
+
+Example files are located in the subfolder inside the `Models` directory.
+
+Each model folder may contain sample outputs that demonstrate the expected behavior of the model.
+
+---
+
+## Running MIDI Examples
+
+This project supports `.midi` file playback using **Timidity**.
+
+### 1. Install Timidity
+
+#### On Ubuntu / Debian:
+    sudo apt update
+    sudo apt install timidity
+
+#### On macOS (using Homebrew):
+    brew install timidity
+
+#### On Windows:
+- Download and install TiMidity++ from a trusted source
+- Add it to your system PATH
+
+---
+
+### 2. Run a MIDI example
+
+Navigate to the example file inside the model folder:
+
+    Models/<your_model>/
+
+Then run:
+
+    timidity example.midi
+
+---
+
+### Notes
+- Example files use `.midi` format
+- Make sure Timidity is properly installed before running playback
+- If no audio is produced, check your system audio configuration
+
+---
+
 ## Key Idea
 
 The core of AiMusic is a **decoder-only Transformer model trained from scratch on symbolic music data**.
