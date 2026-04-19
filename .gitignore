@@ -19,8 +19,6 @@ venv/
 # Generated files
 note.txt
 note.midi
-*.midi
-*.mid
 *.wav
 generated.txt
 generated.midi
