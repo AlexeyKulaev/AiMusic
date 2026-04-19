@@ -3,12 +3,6 @@
 **AiMusic** is a full-stack AI music generation system built around a **self-designed and self-trained decoder-only transformer model**.  
 The system generates original musical compositions in MIDI format using autoregressive sequence modeling and converts them into playable audio using TiMidity++.
 
-This project was developed end-to-end, including:
-- custom transformer architecture design
-- training pipeline implementation
-- MIDI tokenization / detokenization system
-- web-based inference and playback interface
-
 The model was trained on the **MAESTRO dataset**, a high-quality collection of aligned piano performances, used for symbolic music learning and sequence modeling.
 
 ---
